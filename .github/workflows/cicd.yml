@@ -59,7 +59,7 @@ jobs:
           service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
       - name: Pull data with DVC
         run: |
-          dvc remote modify --local labstore credentialpath "$GOOGLE_APPLICATION_CREDENTIALS"
+          # google-auth reads the WIF file through Application Default Credentials.
           dvc pull data/train_batch1.csv.dvc data/holdout.csv.dvc
       - name: Train model
         env:
