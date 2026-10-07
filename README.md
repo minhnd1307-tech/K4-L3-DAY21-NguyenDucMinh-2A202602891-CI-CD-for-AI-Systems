@@ -6,6 +6,22 @@ Khoá: K4
 
 ---
 
+## Triển khai đã kiểm chứng
+
+GCP được tạo bằng Terraform trong `infra/gcp`. Project chặn JSON key nên hệ thống dùng WIF cho GitHub và service account gắn trên VM. DVC remote là `gs://income-lab-2a202602891/dvc`; API đang phục vụ tại [34.60.239.144:8080](http://34.60.239.144:8080/docs).
+
+| Kết quả | Bằng chứng |
+|---|---|
+| CP2: bốn jobs xanh, F1 0.7149 | [Actions CP2](https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems/actions/runs/37655942567) |
+| CP3: commit chỉ đổi DVC, bốn jobs xanh, F1 0.7354 | [Actions CP3](https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems/actions/runs/37656393751) |
+| Gate chặn F1 0.5907, giữ model cũ | [Kiểm chứng gate](https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems/actions/runs/37657213948) |
+| Bonus 4 chặn F1 giảm dù vẫn vượt 0.65 | [Kiểm chứng regression](https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems/actions/runs/37658506229) |
+| Bonus 2–5 chạy xanh; 25 tests | [Actions bonus](https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems/actions/runs/37657652706) |
+
+Xem [giải thích code và kết quả thực tế](tasks/cp2-giai-thich.md). Để hoàn tất toàn bộ rubric 100 điểm, còn cần kích hoạt DagsHub bằng tài khoản của người học, chụp đủ ảnh 01–05 theo quy ước URL, và nộp URL repo trên VLearn. Không coi các mục này là đã xong khi chưa có bằng chứng.
+
+---
+
 ## Mục Tiêu Học Tập
 
 Sau khi hoàn thành lab này, bạn có khả năng:

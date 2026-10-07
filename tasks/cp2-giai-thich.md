@@ -102,3 +102,5 @@ Bonus DagsHub dùng MLflow sẵn có, không thêm SDK. Train đọc ba GitHub S
 Kết quả bonus trên GitHub: ngưỡng 0.30 đạt F1 **0.7537**, so với **0.7354** ở 0.5. Tỷ lệ lớp dương **24.7842%**. Confusion matrix mặc định: TN=359, FP=17, FN=42, TP=82; precision lớp cao=0.8283, recall=0.6613.
 
 Ảnh 01 hiện có bảng MLflow đúng metrics/params nhưng thiếu thanh địa chỉ; cần chụp lại để đáp ứng quy ước chung của rubric.
+
+[Kiểm chứng Bonus 4 thật](https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems/actions/runs/37658506229): candidate F1 **0.701422** vượt 0.65 nên Quality Gate xanh, nhưng thấp hơn current F1 **0.735426** nên Release hủy trước upload. Generation của cả model và report GCS không đổi. Đây là lần thất bại có chủ ý để kiểm chứng bảo vệ chất lượng.

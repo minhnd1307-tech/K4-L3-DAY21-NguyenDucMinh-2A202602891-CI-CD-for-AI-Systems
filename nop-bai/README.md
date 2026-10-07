@@ -22,11 +22,11 @@ nop-bai/
 
 Đánh dấu `[x]` khi hoàn thành từng mục:
 
-- [ ] Repo GitHub ở chế độ **public** và chứa toàn bộ code, cấu hình đã hoàn thiện.
+- [x] Repo GitHub ở chế độ **public** và chứa toàn bộ code, cấu hình đã hoàn thiện.
 - [ ] Đủ 5 ảnh trong `anh-chup-man-hinh/`, đúng tên file, đúng thứ tự (xem
       [yêu cầu chi tiết](anh-chup-man-hinh/README.md)).
-- [ ] `bao-cao.md` đã điền đủ 3 mục bắt buộc và không vượt quá 1 trang A4.
-- [ ] Đã `git push` toàn bộ thư mục `nop-bai/` lên GitHub.
+- [x] `bao-cao.md` đã điền đủ 3 mục bắt buộc và không vượt quá 1 trang A4.
+- [x] Đã `git push` toàn bộ thư mục `nop-bai/` lên GitHub.
 - [ ] Dán URL repo GitHub vào bài nộp trên **https://vlearn.dev**.
 - [ ] Mở lại URL vừa nộp ở chế độ ẩn danh để chắc chắn repo public và người chấm xem được.
 
@@ -71,3 +71,7 @@ Nếu bạn dùng macOS, có thể nén nhanh bằng lệnh sẵn có:
 ```bash
 sips -Z 1600 nop-bai/anh-chup-man-hinh/01-mlflow-ui.png
 ```
+
+## Phần còn cần người học hoàn tất
+
+Core CP1–CP3 và Bonus 2–5 đã có code/run kiểm chứng. Bonus 1 chưa có tài khoản/credentials DagsHub. Ảnh 01 cần chụp lại có thanh địa chỉ; ảnh 02–05 chưa có vì công cụ Windows/browser của phiên làm việc lỗi sandbox. Cần lưu ảnh đúng tên, commit/push rồi nộp URL repo trên VLearn. Các checkbox ảnh và nộp bài vẫn để trống có chủ ý.
