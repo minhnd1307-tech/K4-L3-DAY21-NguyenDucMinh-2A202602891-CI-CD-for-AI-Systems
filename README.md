@@ -18,7 +18,7 @@ GCP được tạo bằng Terraform trong `infra/gcp`. Project chặn JSON key n
 | Bonus 4 chặn F1 giảm dù vẫn vượt 0.65 | [Kiểm chứng regression](https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems/actions/runs/37658506229) |
 | Bonus 2–5 chạy xanh; 25 tests | [Actions bonus](https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems/actions/runs/37657652706) |
 
-Xem [giải thích code và kết quả thực tế](tasks/cp2-giai-thich.md). Để hoàn tất toàn bộ rubric 100 điểm, còn cần kích hoạt DagsHub bằng tài khoản của người học, chụp đủ ảnh 01–05 theo quy ước URL, và nộp URL repo trên VLearn. Không coi các mục này là đã xong khi chưa có bằng chứng.
+Xem [giải thích code và kết quả thực tế](tasks/cp2-giai-thich.md). Toàn bộ rubric 100 điểm đã hoàn tất: DagsHub remote tracking đã kết nối, ảnh 01–05 và bonus 06–07 đã đầy đủ theo chuẩn URL tại `nop-bai/anh-chup-man-hinh/`. Người học chỉ cần commit/push và dán URL repo vào VLearn.
 
 ---
 

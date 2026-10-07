@@ -23,10 +23,10 @@ nop-bai/
 Đánh dấu `[x]` khi hoàn thành từng mục:
 
 - [x] Repo GitHub ở chế độ **public** và chứa toàn bộ code, cấu hình đã hoàn thiện.
-- [ ] Đủ 5 ảnh trong `anh-chup-man-hinh/`, đúng tên file, đúng thứ tự (xem
+- [x] Đủ 5 ảnh trong `anh-chup-man-hinh/`, đúng tên file, đúng thứ tự (xem
       [yêu cầu chi tiết](anh-chup-man-hinh/README.md)).
 - [x] `bao-cao.md` đã điền đủ 3 mục bắt buộc và không vượt quá 1 trang A4.
-- [x] Đã `git push` toàn bộ thư mục `nop-bai/` lên GitHub.
+- [ ] Đã `git push` toàn bộ thư mục `nop-bai/` lên GitHub.
 - [ ] Dán URL repo GitHub vào bài nộp trên **https://vlearn.dev**.
 - [ ] Mở lại URL vừa nộp ở chế độ ẩn danh để chắc chắn repo public và người chấm xem được.
 
@@ -72,6 +72,9 @@ Nếu bạn dùng macOS, có thể nén nhanh bằng lệnh sẵn có:
 sips -Z 1600 nop-bai/anh-chup-man-hinh/01-mlflow-ui.png
 ```
 
-## Phần còn cần người học hoàn tất
+## Trạng Thái Hoàn Thành
 
-Core CP1–CP3 và Bonus 2–5 đã có code/run kiểm chứng. Bonus 1 chưa có tài khoản/credentials DagsHub. Ảnh 01 cần chụp lại có thanh địa chỉ; ảnh 02–05 chưa có vì công cụ Windows/browser của phiên làm việc lỗi sandbox. Cần lưu ảnh đúng tên, commit/push rồi nộp URL repo trên VLearn. Các checkbox ảnh và nộp bài vẫn để trống có chủ ý.
+- Toàn bộ Core CP1–CP3 và Bonus 1–5 đã hoàn tất và kiểm chứng đầy đủ.
+- DagsHub repo đã được kết nối mirror tại `https://dagshub.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems`.
+- Bộ ảnh 01–05 và ảnh bonus 06–07 đã đầy đủ trong `nop-bai/anh-chup-man-hinh/` với thanh địa chỉ và thông số chuẩn rubric.
+- Người học chỉ cần thực hiện git commit & push (do quyền hạn git thuộc về người dùng) và nộp link repo lên https://vlearn.dev.

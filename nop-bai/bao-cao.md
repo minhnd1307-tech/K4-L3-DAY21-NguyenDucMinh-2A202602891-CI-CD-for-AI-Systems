@@ -37,7 +37,7 @@ Adult có khoảng 24.8% mẫu thu nhập cao. Luôn đoán thấp vẫn đạt 
 | GCP chặn tạo JSON key. | Policy của project không cho tạo khóa service account. | Đã dùng WIF cho GitHub và service account gắn trên VM, giữ quyền chỉ trên bucket lab. |
 | Kiểm chứng model yếu. | Bộ 50 cây, learning rate 0.05, depth 2 đạt F1 0.5907 trên CP3. | Gate đã chặn Release; model GCS không đổi, sau đó khôi phục tham số tốt. |
 
-Bonus quét ngưỡng chọn 0.30, F1 0.7537 so với 0.7354 tại 0.5; đây là kết quả thăm dò trên holdout. Tỷ lệ lớp dương 24.784% không vượt ngưỡng cảnh báo 5 điểm phần trăm. Release so F1 mới với bản đang chạy và hủy upload nếu giảm.
+Bonus quét ngưỡng chọn 0.30, F1 0.7537 so với 0.7354 tại 0.5; đây là kết quả thăm dò trên holdout. Tỷ lệ lớp dương 24.784% không vượt ngưỡng cảnh báo 5 điểm phần trăm. Release so F1 mới với bản đang chạy và hủy upload nếu giảm. Remote tracking DagsHub kết nối tại `minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems`.
 
 ---
 
