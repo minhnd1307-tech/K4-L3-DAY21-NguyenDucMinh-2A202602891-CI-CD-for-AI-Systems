@@ -45,7 +45,7 @@ Dữ liệu Adult có khoảng 24.8% mẫu thu nhập cao. Mô hình luôn đoá
 
 | Khó khăn | Nguyên nhân | Cách giải quyết |
 |---|---|---|
-| Python mặc định thiếu thư viện ML. | Python hệ thống khác môi trường dự án. | Đã dùng Python trong `.venv` để chạy cả ba thí nghiệm. |
+| GCP chặn tạo JSON key. | Policy của project không cho tạo khóa service account. | Đã dùng WIF cho GitHub và service account gắn trên VM, giữ quyền chỉ trên bucket lab. |
 | Một cấu hình không đạt ngưỡng F1. | Bộ 50 cây, learning rate 0.05, depth 2 chỉ đạt F1 0.6051. | Đã chọn bộ 200 cây đạt F1 0.7149. |
 
 ---
@@ -56,10 +56,10 @@ Dữ liệu Adult có khoảng 24.8% mẫu thu nhập cao. Mô hình luôn đoá
 
 | | f1_score | accuracy |
 |---|---|---|
-| Bước 2 (chỉ `train_batch1`) | ___ | ___ |
+| Bước 2 (chỉ `train_batch1`) | 0.7149 | 0.8740 |
 | Bước 3 (thêm `train_batch2`) | ___ | ___ |
 
-**Nhận xét:** ___
+**Nhận xét:** Bước 2 dùng bộ tham số đã chọn ở CP1, đạt F1 0.7149 và accuracy 0.8740 trên holdout. Bước 3 chưa thực hiện nên chưa có số liệu để so sánh tác động của batch 2.
 
 <!--
 Một câu trả lời trung thực kiểu "f1 giảm 0,01 vì dữ liệu mới cùng phân phối, không mang

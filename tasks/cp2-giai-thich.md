@@ -68,3 +68,21 @@ Tests local không thay cho kiểm chứng cloud: CP2 chỉ hoàn thành khi b�
 - [GitHub Actions artifacts](https://docs.github.com/en/actions/tutorials/store-and-share-data)
 - [DVC Google Cloud Storage](https://doc.dvc.org/user-guide/data-management/remote-storage/google-cloud-storage)
 - [GCP WIF cho deployment pipelines](https://docs.cloud.google.com/iam/docs/workload-identity-federation-with-deployment-pipelines)
+
+## Kết quả triển khai đã kiểm chứng
+
+- Project: `project-cd10db9a-96d8-4227-8ab`; bucket: `income-lab-2a202602891`; VM: `income-api` (`e2-small`, `us-central1-a`). Terraform plan sau apply báo **No changes**.
+- DVC push đủ ba file. Runner GitHub đã DVC pull thành công bằng WIF.
+- Train trên GitHub đạt **F1 0.7149321266968326**, **accuracy 0.874**; Quality Gate đã qua. Model GCS có SHA256 `0b4678d0fc940bee246dc72325fb937f384e2c8cf3dbe58565ea13ce9ae7a124`, trùng artifact đã qua gate.
+- API [healthz](http://34.60.239.144:8080/healthz) trả `{"status":"ok"}`. Hai mẫu trong bài lab lần lượt trả nhãn thấp và cao. Thiếu đặc trưng trả HTTP 400.
+- [Run kiểm chứng Train/Gate](https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems/actions/runs/37654884696) đã qua Unit Test, Train và Quality Gate; Release bản cũ gặp mismatch SSH host key. Bản sửa pin ECDSA fingerprint đã sẵn sàng local. GitHub đang trả HTTP 500 khi push/cập nhật variable/rerun; chưa có run bốn jobs xanh của bản sửa.
+- [Run từ push](https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems/actions/runs/37655400811) chứng minh trigger tự động đã hoạt động sau khi bật Actions trên repo fork.
+
+Để chụp ảnh 04, mở Git Bash và chạy hai lệnh thật dưới đây rồi chụp cả lệnh lẫn kết quả:
+
+```bash
+curl http://34.60.239.144:8080/healthz
+curl -X POST http://34.60.239.144:8080/score -H 'Content-Type: application/json' -d '{"features": [60, 2, 5, 2, 4, 0, 1, 0, 0, 45]}'
+```
+
+Ảnh 05 chụp [GCS Console của bucket](https://console.cloud.google.com/storage/browser/income-lab-2a202602891?project=project-cd10db9a-96d8-4227-8ab), hiển thị `dvc/` và `artifacts/current/model.joblib`; có thể tách 05a/05b. Ảnh 02 cần chờ run bốn jobs xanh. Ảnh trình duyệt phải có thanh địa chỉ; chưa tạo được ảnh 02/04/05 vì công cụ Windows/browser lỗi sandbox. Kết quả CLI không thay thế các ảnh này.
