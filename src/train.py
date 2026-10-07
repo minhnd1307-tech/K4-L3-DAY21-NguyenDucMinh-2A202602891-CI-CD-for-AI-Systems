@@ -7,21 +7,9 @@ import joblib
 import os
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import accuracy_score, f1_score
-import mlflow
 
-# Cấu hình lưu trữ vào SQLite cục bộ
-mlflow.set_tracking_uri("sqlite:///mlflow.db")
-
-# (Tùy chọn) Đặt tên cho nhóm thí nghiệm để dễ quản lý
-mlflow.set_experiment("adult_income_experiment")
-
-# Nguong chat luong cua lab nay la f1_score, KHONG phai accuracy.
-# Ly do: bo du lieu Adult co ty le lop 75/25. Mot mo hinh doan bua
-# "thu nhap thap" cho moi mau da dat accuracy 0.75 ma khong hoc duoc gi.
+# Quality gate uses F1 for the positive income class.
 F1_THRESHOLD = 0.65
-
-# Cau hinh tracking URI mac dinh tro den sqlite:///mlflow.db
-mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db"))
 
 
 def train(
@@ -50,6 +38,9 @@ def train(
     y_train = df_train["target"]
     X_eval = df_eval.drop(columns=["target"])
     y_eval = df_eval["target"]
+
+    mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db"))
+    mlflow.set_experiment("adult_income_experiment")
 
     with mlflow.start_run():
 

@@ -12,3 +12,11 @@ __pycache__/
 *.pyc
 .DS_Store
 mlruns/
+.pytest_cache/
+.secrets/
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+gha-creds-*.json
