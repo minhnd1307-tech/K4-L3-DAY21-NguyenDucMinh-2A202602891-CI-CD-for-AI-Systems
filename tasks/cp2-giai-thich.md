@@ -85,7 +85,7 @@ curl http://34.60.239.144:8080/healthz
 curl -X POST http://34.60.239.144:8080/score -H 'Content-Type: application/json' -d '{"features": [60, 2, 5, 2, 4, 0, 1, 0, 0, 45]}'
 ```
 
-Ảnh 05 chụp [GCS Console của bucket](https://console.cloud.google.com/storage/browser/income-lab-2a202602891?project=project-cd10db9a-96d8-4227-8ab), hiển thị `dvc/` và `artifacts/current/model.joblib`; có thể tách 05a/05b. Ảnh 02 dùng run CP2 xanh ở trên; ảnh 03 dùng run CP3 từ commit dữ liệu. Ảnh trình duyệt phải có thanh địa chỉ; chưa tạo được ảnh 02/04/05 vì công cụ Windows/browser lỗi sandbox. Kết quả CLI không thay thế các ảnh này.
+Ảnh 05 chụp [GCS Console của bucket](https://console.cloud.google.com/storage/browser/income-lab-2a202602891?project=project-cd10db9a-96d8-4227-8ab), hiển thị `dvc/` và `artifacts/current/model.joblib`; có thể tách 05a/05b. Ảnh 02 dùng run CP2 xanh ở trên; ảnh 03 dùng run CP3 từ commit dữ liệu. Ảnh trình duyệt phải có thanh địa chỉ; chưa tạo được ảnh 02/03/04/05 vì công cụ Windows/browser lỗi sandbox. Kết quả CLI không thay thế các ảnh này.
 
 ## Bonus hoạt động thế nào
 
@@ -98,3 +98,7 @@ curl -X POST http://34.60.239.144:8080/score -H 'Content-Type: application/json'
 Bonus DagsHub dùng MLflow sẵn có, không thêm SDK. Train đọc ba GitHub Secrets `MLFLOW_TRACKING_URI`, `MLFLOW_TRACKING_USERNAME`, `MLFLOW_TRACKING_PASSWORD`; URI dạng `https://dagshub.com/<user>/<repo>.mlflow`. Khi chưa cấu hình URI, CI dùng SQLite; đây chưa phải bằng chứng Bonus 1. Không đưa token vào chat, Git hoặc báo cáo. Xem [DagsHub Experiment Tracking](https://dagshub.com/docs/feature_guide/experiment_tracking/).
 
 [Kiểm chứng Quality Gate thật](https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems/actions/runs/37657213948): cấu hình 50 cây, learning rate 0.05, depth 2 đạt F1 0.5907; Gate thất bại, Release bị skipped. Generation của cả model và report trên GCS không đổi; VM giữ model CP3. Bộ tham số 200/0.1/5 đã được khôi phục.
+
+Kết quả bonus trên GitHub: ngưỡng 0.30 đạt F1 **0.7537**, so với **0.7354** ở 0.5. Tỷ lệ lớp dương **24.7842%**. Confusion matrix mặc định: TN=359, FP=17, FN=42, TP=82; precision lớp cao=0.8283, recall=0.6613.
+
+Ảnh 01 hiện có bảng MLflow đúng metrics/params nhưng thiếu thanh địa chỉ; cần chụp lại để đáp ứng quy ước chung của rubric.

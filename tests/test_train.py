@@ -26,7 +26,7 @@ def _make_temp_data(tmp_path):
 
 
 @pytest.fixture
-def training_run(tmp_path, monkeypatch):
+def training_run(tmp_path, monkeypatch, capsys):
     # Keep test models, reports and MLflow history away from CP1 artifacts.
     monkeypatch.chdir(tmp_path)
     monkeypatch.setenv("MLFLOW_TRACKING_URI", (tmp_path / "mlruns").as_uri())
@@ -45,7 +45,7 @@ def test_train_returns_float(training_run):
     assert 0.0 <= f1 <= 1.0
 
 
-def test_report_file_created(training_run):
+def test_report_file_created(training_run, capsys):
     f1, _ = training_run
     report = json.loads(Path("outputs/report.json").read_text())
     assert report["f1_score"] == f1
@@ -55,6 +55,7 @@ def test_report_file_created(training_run):
     assert report["best_threshold_f1"] >= report["f1_at_0_5"] == f1
     detail = Path("outputs/detail.txt").read_text()
     assert all(label in detail for label in ["precision", "recall", "thu_nhap_thap", "thu_nhap_cao"])
+    assert "WARNING: DATA DRIFT" in capsys.readouterr().out
 
 
 def test_model_file_created(training_run):
