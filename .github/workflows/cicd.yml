@@ -108,6 +108,9 @@ jobs:
     name: Release
     needs: quality-gate
     runs-on: ubuntu-latest
+    env:
+      # ECDSA host key verified over an authenticated SSH connection to this VM.
+      SERVER_FINGERPRINT: SHA256:akfSrcplapovIdy/CrWfLo6cDK6QAAhlWWmgEcIoqmA
     permissions:
       contents: read
       id-token: write
@@ -121,11 +124,6 @@ jobs:
           name: trained-model
       - name: Install Cloud Storage SDK
         run: pip install google-cloud-storage==2.16.0
-      - name: Require SSH host fingerprint
-        env:
-          SERVER_FINGERPRINT: ${{ vars.SERVER_FINGERPRINT }}
-        run: |
-          test -n "$SERVER_FINGERPRINT" || { echo 'Set repository variable SERVER_FINGERPRINT to the VM SSH SHA256 fingerprint.'; exit 1; }
       - name: Authenticate release to Cloud Storage
         uses: google-github-actions/auth@v3
         with:
@@ -151,7 +149,7 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          fingerprint: ${{ vars.SERVER_FINGERPRINT }}
+          fingerprint: ${{ env.SERVER_FINGERPRINT }}
           source: src/serve.py
           target: /home/${{ secrets.SERVER_USER }}/src
           strip_components: 1
@@ -161,7 +159,7 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          fingerprint: ${{ vars.SERVER_FINGERPRINT }}
+          fingerprint: ${{ env.SERVER_FINGERPRINT }}
           script: |
             set -eu
             sudo systemctl restart income-api

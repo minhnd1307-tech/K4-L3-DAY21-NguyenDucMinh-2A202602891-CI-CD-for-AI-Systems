@@ -35,7 +35,7 @@ Mỗi test đổi thư mục làm việc và MLflow URI sang thư mục tạm. V
 
 `needs` quy định thứ tự và chặn job phía sau khi job trước thất bại. Artifact chuyển file giữa các runner; job output chuyển giá trị F1. Model chỉ được publish vào `artifacts/current/model.joblib` ở Release, nên mô hình trượt gate không thay thế bản đang phục vụ.
 
-Workflow được kích hoạt khi push code, tests, cấu hình, con trỏ dữ liệu lên `main`, hoặc chọn Run workflow. Concurrency giới hạn một workflow đang chạy để tránh hai bản release ghi đè model cùng lúc. Repo dùng bốn secrets: `ARTIFACT_BUCKET`, `SERVER_HOST`, `SERVER_USER`, `SERVER_SSH_KEY`. Bốn variables công khai là `SERVER_FINGERPRINT`, `GCP_PROJECT_ID`, `WORKLOAD_IDENTITY_PROVIDER`, `GCP_SERVICE_ACCOUNT`. Fingerprint xác minh đúng SSH host; ba biến GCP chọn project, WIF provider và service account.
+Workflow được kích hoạt khi push code, tests, cấu hình, con trỏ dữ liệu lên `main`, hoặc chọn Run workflow. Concurrency giới hạn một workflow đang chạy để tránh hai bản release ghi đè model cùng lúc. Repo dùng bốn secrets: `ARTIFACT_BUCKET`, `SERVER_HOST`, `SERVER_USER`, `SERVER_SSH_KEY`. Ba variables công khai là `GCP_PROJECT_ID`, `WORKLOAD_IDENTITY_PROVIDER`, `GCP_SERVICE_ACCOUNT`. Fingerprint ECDSA của VM được pin trong environment của job Release để xác minh đúng SSH host; ba biến GCP chọn project, WIF provider và service account.
 
 ## 4. API `src/serve.py`
 

@@ -35,6 +35,6 @@ Token chỉ truyền qua environment. Tài khoản phải có quyền trên proj
 
 Local DVC dùng Application Default Credentials của tài khoản sở hữu project: `gcloud auth application-default login`, rồi `dvc push`. Copy `src/serve.py` và `scripts/setup-vm.sh` lên VM; chạy `bash setup-vm.sh income-lab-2a202602891` dưới user `income`.
 
-GitHub Secrets: `ARTIFACT_BUCKET`, `SERVER_HOST`, `SERVER_USER`, `SERVER_SSH_KEY`. Variables: `SERVER_FINGERPRINT`, `GCP_PROJECT_ID`, `WORKLOAD_IDENTITY_PROVIDER`, `GCP_SERVICE_ACCOUNT`. Provider và service account lấy từ Terraform outputs. Fingerprint lấy từ SSH host key đã xác minh; không tắt kiểm tra host key.
+GitHub Secrets: `ARTIFACT_BUCKET`, `SERVER_HOST`, `SERVER_USER`, `SERVER_SSH_KEY`. Variables: `GCP_PROJECT_ID`, `WORKLOAD_IDENTITY_PROVIDER`, `GCP_SERVICE_ACCOUNT`. Provider và service account lấy từ Terraform outputs. Fingerprint ECDSA của VM đã xác minh được pin trong job Release; cần cập nhật nếu tạo VM mới với host key khác. Không tắt kiểm tra host key.
 
 Push `main` kích hoạt Unit Test → Train → Quality Gate → Release. Terraform quản lý hạ tầng; Actions huấn luyện và release; systemd giữ API chạy trên VM. Xem [giải thích CP2](../../tasks/cp2-giai-thich.md).
