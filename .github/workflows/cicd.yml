@@ -1,5 +1,5 @@
 name: Income Model CI/CD
-run-name: "CP2 - ${{ github.event.head_commit.message || 'Manual verification' }}"
+run-name: "Income Lab - ${{ github.event.head_commit.message || 'Manual verification' }}"
 
 on:
   push:
@@ -66,8 +66,12 @@ jobs:
           dvc pull data/train_batch1.csv.dvc data/holdout.csv.dvc
       - name: Train model
         env:
-          MLFLOW_TRACKING_URI: sqlite:///mlflow.db
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI || 'sqlite:///mlflow.db' }}
+          MLFLOW_TRACKING_USERNAME: ${{ secrets.MLFLOW_TRACKING_USERNAME }}
+          MLFLOW_TRACKING_PASSWORD: ${{ secrets.MLFLOW_TRACKING_PASSWORD }}
         run: python src/train.py
+      - name: Show precision, recall and confusion matrix
+        run: cat outputs/detail.txt
       - name: Read report
         id: read_report
         run: |
@@ -85,6 +89,7 @@ jobs:
           path: |
             models/model.joblib
             outputs/report.json
+            outputs/detail.txt
           if-no-files-found: error
 
   quality-gate:
@@ -130,19 +135,10 @@ jobs:
           project_id: ${{ vars.GCP_PROJECT_ID }}
           workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
-      - name: Publish approved model to Cloud Storage
+      - name: Compare F1 and publish approved model
         env:
           ARTIFACT_BUCKET: ${{ secrets.ARTIFACT_BUCKET }}
-        run: |
-          python - <<'PYEOF'
-          import os
-          from google.cloud import storage
-          client = storage.Client()
-          bucket = client.bucket(os.environ['ARTIFACT_BUCKET'])
-          bucket.blob('artifacts/current/report.json').upload_from_filename('outputs/report.json')
-          bucket.blob('artifacts/current/model.joblib').upload_from_filename('models/model.joblib')
-          print('Approved model and report uploaded.')
-          PYEOF
+        run: python src/release.py
       - name: Copy serving code to VM
         uses: appleboy/scp-action@v0.1.7
         with:

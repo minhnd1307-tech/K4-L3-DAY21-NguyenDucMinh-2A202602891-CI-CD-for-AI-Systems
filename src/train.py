@@ -6,7 +6,7 @@ import json
 import joblib
 import os
 from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.metrics import accuracy_score, f1_score
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, f1_score
 
 # Quality gate uses F1 for the positive income class.
 F1_THRESHOLD = 0.65
@@ -29,55 +29,86 @@ def train(
         f1 (float): diem F1 cua lop duong (thu nhap > 50K) tren tap holdout.
     """
 
-    # TODO 1: Doc du lieu huan luyen va danh gia
+    # Doc du lieu huan luyen va danh gia
     df_train = pd.read_csv(data_path)
     df_eval = pd.read_csv(eval_path)
 
-    # TODO 2: Tach dac trung (X) va nhan (y)
+    # Tach dac trung (X) va nhan (y)
     X_train = df_train.drop(columns=["target"])
     y_train = df_train["target"]
     X_eval = df_eval.drop(columns=["target"])
     y_eval = df_eval["target"]
+
+    positive_ratio = float(y_train.mean())
+    print(f"Positive class ratio: {positive_ratio:.4%} (reference: 24.8%)")
+    if round(abs(positive_ratio - 0.248), 12) > 0.05:
+        print("WARNING: DATA DRIFT - positive class ratio differs by more than 5 percentage points.")
 
     mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI", "sqlite:///mlflow.db"))
     mlflow.set_experiment("adult_income_experiment")
 
     with mlflow.start_run():
 
-        # TODO 3: Ghi nhan cac sieu tham so
+        # Ghi nhan cac sieu tham so
         mlflow.log_params(params)
 
-        # TODO 4: Khoi tao va huan luyen GradientBoostingClassifier
+        # Khoi tao va huan luyen GradientBoostingClassifier
         # Goi y: su dung random_state=42 de dam bao tinh tai tao
         model = GradientBoostingClassifier(**params, random_state=42)
         model.fit(X_train, y_train)
 
-        # TODO 5: Du doan tren tap holdout va tinh chi so
+        # Du doan tren tap holdout va tinh chi so
         # Chu y: f1_score o day tinh cho LOP DUONG (target = 1), khong dung average.
         preds = model.predict(X_eval)
         f1 = float(f1_score(y_eval, preds))
         acc = float(accuracy_score(y_eval, preds))
 
-        # TODO 6: Ghi nhan chi so vao MLflow
-        mlflow.log_metric("f1_score", f1)
-        mlflow.log_metric("accuracy", acc)
+        probabilities = model.predict_proba(X_eval)[:, 1]
+        threshold_scores = [
+            (i / 20, float(f1_score(y_eval, probabilities > i / 20, zero_division=0)))
+            for i in range(2, 19)
+        ]
+        best_threshold, best_threshold_f1 = max(
+            threshold_scores, key=lambda result: (result[1], -abs(result[0] - 0.5))
+        )
+        report = {
+            "f1_score": f1, "accuracy": acc, "positive_ratio": positive_ratio,
+            "f1_at_0_5": f1, "best_threshold": best_threshold,
+            "best_threshold_f1": best_threshold_f1,
+        }
+        # The gate and serving keep the default threshold; the scan is exploratory.
+        mlflow.log_metrics(report)
         mlflow.sklearn.log_model(model, "model")
 
-        # TODO 7: In ket qua ra man hinh
+        # In ket qua ra man hinh
         print(f"F1: {f1:.4f} | Accuracy: {acc:.4f}")
 
-        # TODO 8: Luu metrics ra file outputs/report.json
+        # Luu metrics ra file outputs/report.json
         # File nay duoc doc boi GitHub Actions o Buoc 2
         os.makedirs("outputs", exist_ok=True)
         with open("outputs/report.json", "w") as f:
-            json.dump({"f1_score": f1, "accuracy": acc}, f)
+            json.dump(report, f)
+        detail = (
+            "Confusion matrix (rows=true, columns=predicted; labels=[0, 1]):\n"
+            + str(confusion_matrix(y_eval, preds, labels=[0, 1])) + "\n\n"
+            + classification_report(
+                y_eval, preds, labels=[0, 1],
+                target_names=["thu_nhap_thap", "thu_nhap_cao"], digits=4, zero_division=0,
+            )
+        )
+        with open("outputs/detail.txt", "w") as f:
+            f.write(detail)
+        print(detail)
+        print(f"Best scanned threshold: {best_threshold:.2f}; F1: {best_threshold_f1:.4f}")
+        mlflow.log_artifact("outputs/report.json")
+        mlflow.log_artifact("outputs/detail.txt")
 
-        # TODO 9: Luu mo hinh ra file models/model.joblib
+        # Luu mo hinh ra file models/model.joblib
         # File nay duoc upload len cloud storage o Buoc 2
         os.makedirs("models", exist_ok=True)
         joblib.dump(model, "models/model.joblib")
 
-    # TODO 10: Tra ve f1
+    # Tra ve f1
     return f1
 
 

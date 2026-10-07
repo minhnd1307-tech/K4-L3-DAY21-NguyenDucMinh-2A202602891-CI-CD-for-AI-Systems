@@ -50,6 +50,11 @@ def test_report_file_created(training_run):
     report = json.loads(Path("outputs/report.json").read_text())
     assert report["f1_score"] == f1
     assert 0.0 <= report["accuracy"] <= 1.0
+    assert 0.0 <= report["positive_ratio"] <= 1.0
+    assert report["best_threshold"] in {i / 20 for i in range(2, 19)}
+    assert report["best_threshold_f1"] >= report["f1_at_0_5"] == f1
+    detail = Path("outputs/detail.txt").read_text()
+    assert all(label in detail for label in ["precision", "recall", "thu_nhap_thap", "thu_nhap_cao"])
 
 
 def test_model_file_created(training_run):

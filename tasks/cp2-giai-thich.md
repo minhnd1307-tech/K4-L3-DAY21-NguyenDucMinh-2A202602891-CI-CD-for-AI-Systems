@@ -1,4 +1,4 @@
-# Giải thích code CP2
+# Giải thích code CP2, CP3 và bonus
 
 CP2 biến kết quả huấn luyện của CP1 thành pipeline tự động và API dự đoán trên GCP.
 
@@ -58,7 +58,7 @@ Các trường phân loại đã được mã hóa thành số từ bước chu�
 
 `scripts/setup-vm.sh` cài môi trường Python riêng, pin phiên bản thư viện giống quá trình train và tạo service `income-api`. Service đọc tên bucket từ environment và dùng danh tính service account gắn trên VM, tự khởi động khi VM reboot và khởi động lại nếu lỗi. Setup chỉ enable service; Release mới khởi động sau khi model đã được publish.
 
-`tests/test_serve.py` kiểm tra startup, prediction, dữ liệu sai và lỗi download bằng GCS giả lập. `tests/test_workflow.py` thực thi đúng đoạn Python Quality Gate trong YAML với các giá trị biên. Bộ test local hiện có 17 trường hợp; tất cả đã qua. Workflow đã qua actionlint và script setup đã qua `bash -n`.
+`tests/test_serve.py` kiểm tra startup, prediction, dữ liệu sai và lỗi download bằng GCS giả lập. `tests/test_workflow.py` thực thi đúng đoạn Python Quality Gate trong YAML với các giá trị biên. Bộ test local hiện có 25 trường hợp; tất cả đã qua, gồm kiểm tra model giảm F1 không được upload. Workflow đã qua actionlint và script setup đã qua `bash -n`.
 
 Tests local không thay cho kiểm chứng cloud: CP2 chỉ hoàn thành khi bốn jobs xanh, DVC push/pull thành công, endpoint trên IP VM hoạt động và đủ ảnh 02/04/05 theo rubric.
 
@@ -75,8 +75,8 @@ Tests local không thay cho kiểm chứng cloud: CP2 chỉ hoàn thành khi b�
 - DVC push đủ ba file. Runner GitHub đã DVC pull thành công bằng WIF.
 - Train trên GitHub đạt **F1 0.7149321266968326**, **accuracy 0.874**; Quality Gate đã qua. Model GCS có SHA256 `0b4678d0fc940bee246dc72325fb937f384e2c8cf3dbe58565ea13ce9ae7a124`, trùng artifact đã qua gate.
 - API [healthz](http://34.60.239.144:8080/healthz) trả `{"status":"ok"}`. Hai mẫu trong bài lab lần lượt trả nhãn thấp và cao. Thiếu đặc trưng trả HTTP 400.
-- [Run kiểm chứng Train/Gate](https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems/actions/runs/37654884696) đã qua Unit Test, Train và Quality Gate; Release bản cũ gặp mismatch SSH host key. Bản sửa pin ECDSA fingerprint đã sẵn sàng local. GitHub đang trả HTTP 500 khi push/cập nhật variable/rerun; chưa có run bốn jobs xanh của bản sửa.
-- [Run từ push](https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems/actions/runs/37655400811) chứng minh trigger tự động đã hoạt động sau khi bật Actions trên repo fork.
+- [CP2: bốn jobs xanh](https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems/actions/runs/37655942567).
+- [CP3: commit dữ liệu, bốn jobs xanh](https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems/actions/runs/37656393751). Commit `2959e2b` chỉ sửa `data/train_batch1.csv.dvc`, tăng train lên 44.722 mẫu, giữ holdout nguyên vẹn. F1 = **0.7354260089686099**, accuracy = **0.882**.
 
 Để chụp ảnh 04, mở Git Bash và chạy hai lệnh thật dưới đây rồi chụp cả lệnh lẫn kết quả:
 
@@ -85,4 +85,16 @@ curl http://34.60.239.144:8080/healthz
 curl -X POST http://34.60.239.144:8080/score -H 'Content-Type: application/json' -d '{"features": [60, 2, 5, 2, 4, 0, 1, 0, 0, 45]}'
 ```
 
-Ảnh 05 chụp [GCS Console của bucket](https://console.cloud.google.com/storage/browser/income-lab-2a202602891?project=project-cd10db9a-96d8-4227-8ab), hiển thị `dvc/` và `artifacts/current/model.joblib`; có thể tách 05a/05b. Ảnh 02 cần chờ run bốn jobs xanh. Ảnh trình duyệt phải có thanh địa chỉ; chưa tạo được ảnh 02/04/05 vì công cụ Windows/browser lỗi sandbox. Kết quả CLI không thay thế các ảnh này.
+Ảnh 05 chụp [GCS Console của bucket](https://console.cloud.google.com/storage/browser/income-lab-2a202602891?project=project-cd10db9a-96d8-4227-8ab), hiển thị `dvc/` và `artifacts/current/model.joblib`; có thể tách 05a/05b. Ảnh 02 dùng run CP2 xanh ở trên; ảnh 03 dùng run CP3 từ commit dữ liệu. Ảnh trình duyệt phải có thanh địa chỉ; chưa tạo được ảnh 02/04/05 vì công cụ Windows/browser lỗi sandbox. Kết quả CLI không thay thế các ảnh này.
+
+## Bonus hoạt động thế nào
+
+`src/train.py` đo tỷ lệ lớp dương trước khi fit; lệch hơn 5 điểm phần trăm so với 24.8% sẽ in `WARNING: DATA DRIFT`. Giá trị `positive_ratio` được ghi vào JSON và MLflow. Sau fit, code quét 17 ngưỡng từ 0.10 đến 0.90, bước 0.05, lưu `best_threshold` và `best_threshold_f1`; nếu hòa F1, chọn ngưỡng gần 0.5 nhất. `f1_score` vẫn dùng nhãn mặc định để gate và API nhất quán. Ngưỡng tốt nhất trên holdout là phân tích thăm dò; muốn thay ngưỡng production cần tập validation riêng.
+
+`outputs/detail.txt` chứa confusion matrix, precision/recall/F1 cho hai lớp; workflow in file này và upload cùng model/report. Với ứng dụng tìm khách hàng thu nhập cao, recall thấp làm mất cơ hội do bỏ sót; precision thấp tốn công tiếp cận nhầm. Chi phí cụ thể tùy ứng dụng, nên lab cân bằng bằng F1 lớp dương.
+
+`src/release.py` đọc report hiện tại từ GCS trước khi upload. Nếu F1 mới thấp hơn, hoặc report cũ lỗi, code dừng và không upload. F1 bằng hoặc cao hơn được publish. Chỉ HTTP 404 được hiểu là chưa từng deploy; lỗi quyền/mạng không được bỏ qua. Pipeline được serialize để hai releases không so sánh/ghi đè cùng lúc.
+
+Bonus DagsHub dùng MLflow sẵn có, không thêm SDK. Train đọc ba GitHub Secrets `MLFLOW_TRACKING_URI`, `MLFLOW_TRACKING_USERNAME`, `MLFLOW_TRACKING_PASSWORD`; URI dạng `https://dagshub.com/<user>/<repo>.mlflow`. Khi chưa cấu hình URI, CI dùng SQLite; đây chưa phải bằng chứng Bonus 1. Không đưa token vào chat, Git hoặc báo cáo. Xem [DagsHub Experiment Tracking](https://dagshub.com/docs/feature_guide/experiment_tracking/).
+
+[Kiểm chứng Quality Gate thật](https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems/actions/runs/37657213948): cấu hình 50 cây, learning rate 0.05, depth 2 đạt F1 0.5907; Gate thất bại, Release bị skipped. Generation của cả model và report trên GCS không đổi; VM giữ model CP3. Bộ tham số 200/0.1/5 đã được khôi phục.

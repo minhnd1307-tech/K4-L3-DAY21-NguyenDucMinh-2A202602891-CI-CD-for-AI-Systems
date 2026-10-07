@@ -1,23 +1,12 @@
 # Báo Cáo Lab Day 21 - CI/CD cho AI Systems
 
-<!--
-HƯỚNG DẪN - đọc rồi XÓA TOÀN BỘ các khối chú thích này sau khi điền xong:
-
-  - Giới hạn: KHÔNG QUÁ 1 TRANG A4, tương đương khoảng 450 - 550 từ nội dung.
-  - Chỉ điền vào các chỗ ___ và các ô trong bảng. Không thêm mục mới.
-  - Viết bằng câu hoàn chỉnh, không gạch đầu dòng cụt lủn.
-  - Kiểm tra độ dài sau khi đã xóa hết chú thích:
-        wc -w nop-bai/bao-cao.md
-    và xem trước bản in bằng cách mở file trên GitHub rồi Ctrl+P / Cmd+P.
--->
-
 | | |
 |---|---|
 | Họ và tên | Nguyễn Đức Minh |
 | MSSV | 2A202602891 |
 | Lớp / Khóa | K4 |
 | Repo GitHub | https://github.com/minhnd1307-tech/K4-L3-DAY21-NguyenDucMinh-2A202602891-CI-CD-for-AI-Systems |
-| Ngày nộp | ___ |
+| Ngày nộp | 08/10/2026 |
 
 ---
 
@@ -52,16 +41,10 @@ Dữ liệu Adult có khoảng 24.8% mẫu thu nhập cao. Mô hình luôn đoá
 
 ## 4. So Sánh Bước 2 và Bước 3 (bắt buộc, 2 - 3 câu)
 
-<!-- Lấy số liệu từ bảng ở mục 3.6 của tasks/buoc-3.md. -->
-
 | | f1_score | accuracy |
 |---|---|---|
 | Bước 2 (chỉ `train_batch1`) | 0.7149 | 0.8740 |
-| Bước 3 (thêm `train_batch2`) | ___ | ___ |
+| Bước 3 (thêm `train_batch2`) | 0.7354 | 0.8820 |
 
-**Nhận xét:** Bước 2 dùng bộ tham số đã chọn ở CP1, đạt F1 0.7149 và accuracy 0.8740 trên holdout. Bước 3 chưa thực hiện nên chưa có số liệu để so sánh tác động của batch 2.
+**Nhận xét:** Khi tăng train từ 22.361 lên 44.722 mẫu, F1 tăng 0.0205 và accuracy tăng 0.0080. Cùng tham số và holdout 500 mẫu cho thấy batch 2 giúp mô hình trên holdout này; thêm dữ liệu không bảo đảm cải thiện trong mọi tình huống.
 
-<!--
-Một câu trả lời trung thực kiểu "f1 giảm 0,01 vì dữ liệu mới cùng phân phối, không mang
-thêm thông tin mới" được đánh giá cao hơn kết luận sai rằng thêm dữ liệu luôn tốt hơn.
--->
